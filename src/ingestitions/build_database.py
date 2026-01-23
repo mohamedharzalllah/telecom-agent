@@ -13,7 +13,7 @@ from src.config.setup import EXCEL_DIR, EXCEL_FILES, PROJECT_ROOT
 
 
 # Persist the SQLite file so the SQL agent can reuse it across calls.
-DB_DIR = PROJECT_ROOT / "data" / "sqlite"
+DB_DIR = PROJECT_ROOT / "data" / "xlsx"
 DB_PATH = DB_DIR / "telecom.db"
 
 

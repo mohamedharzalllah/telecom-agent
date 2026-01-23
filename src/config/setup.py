@@ -32,7 +32,7 @@ def get_llm():
         load_dotenv()
     if not GEMINI_API_KEY:
         raise EnvironmentError("API key missing. Set GEMINI_API_KEY or GOOGLE_API_KEY.")
-    return ChatGoogleGenerativeAI(model="gemini-2.5-flash", api_key=GEMINI_API_KEY)
+    return ChatGoogleGenerativeAI(model="gemini-2.5-flash", api_key=GEMINI_API_KEY,temperature=0.1)
 
 # # Langfuse settings
 # LANGFUSE_PUBLIC_KEY = os.getenv("LANGFUSE_PUBLIC_KEY")

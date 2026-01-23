@@ -64,14 +64,31 @@ EU_COUNTRIES = {
 
 
 def _eu_roaming_note(question: str) -> Optional[str]:
+    """
+    Detect if question mentions EU country and return roaming policy note.
+    
+    Checks for EU countries first, then adds note about free roaming.
+    This ensures Italy, Spain, etc. trigger the EU roaming policy.
+    """
     q = question.lower()
-    if any(word in q for word in ["ue", "union européenne", "europe", "roaming", "etranger", "étranger"]):
-        for country in EU_COUNTRIES:
-            if country in q:
-                return (
-                    f"{country.title()} est dans l'UE : le roaming est inclus ('roaming comme à la maison'), "
-                    "pas de surcoût dans la limite du forfait."
-                )
+    
+    # Check if any EU country is mentioned in the question
+    for country in EU_COUNTRIES:
+        if country in q:
+            return (
+                f"IMPORTANT : {country.title()} est dans l'Union Européenne. "
+                f"Le roaming y est GRATUIT et inclus ('roaming comme à la maison'), "
+                f"aucun surcoût dans la limite de votre forfait. "
+                f"Vous n'avez pas besoin de changer de forfait ou de prendre une option."
+            )
+    
+    # Also check for generic EU/Europe/roaming keywords
+    if any(word in q for word in ["ue", "union européenne", "europe", "roaming", "etranger", "étranger", "voyage"]):
+        return (
+            "Pour les voyages dans l'Union Européenne : le roaming est GRATUIT ('roaming comme à la maison'). "
+            "Hors UE, des frais peuvent s'appliquer - consultez votre espace client pour les pass internationaux."
+        )
+    
     return None
 
 
