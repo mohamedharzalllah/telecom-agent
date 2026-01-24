@@ -10,7 +10,7 @@ import pandas as pd
 from langchain_community.utilities import SQLDatabase
 from langchain_google_genai import ChatGoogleGenerativeAI
 
-from src.config.setup import _ensure_api_key
+from src.config.setup import get_llm
 from src.ingestitions.build_database import (
     build_sqlite_from_excel,
     describe_tables,
@@ -21,10 +21,10 @@ from src.ingestitions.build_database import (
 from src.tools.SQL_tools import TableSelection, UserIds, UserInfo, determine_tables, get_ids, get_info
 
 
-@lru_cache(maxsize=1)
-def _llm() -> ChatGoogleGenerativeAI:
-    """Shared LLM instance for SQL tooling."""
-    return ChatGoogleGenerativeAI(model="gemini-2.5-flash", api_key=_ensure_api_key())
+# @lru_cache(maxsize=1)
+# def _llm() -> ChatGoogleGenerativeAI:
+#     """Shared LLM instance for SQL tooling."""
+#     return ChatGoogleGenerativeAI(model="gemini-2.5-flash", api_key=_ensure_api_key())
 
 
 @lru_cache(maxsize=1)
@@ -43,7 +43,7 @@ def _sql_chain():
         raise ImportError(
             "create_sql_query_chain not available. Ensure `langchain>=0.3.0` is installed."
         ) from exc
-    return create_sql_query_chain(_llm(), _db())
+    return create_sql_query_chain(get_llm(), _db())
 
 
 def schema_context() -> str:
@@ -262,7 +262,7 @@ def run_structured_query(question: str) -> str:
     3) Choose relevant tables.
     4) Generate and execute SQL on the SQLite mirror.
     """
-    llm = _llm()
+    llm = get_llm()
     info: UserInfo = get_info(question, llm=llm)
     ids: UserIds = get_ids(info)
     selection: TableSelection = determine_tables(question)
