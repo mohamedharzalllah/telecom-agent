@@ -8,7 +8,6 @@ from typing import List, Optional, Tuple
 
 import pandas as pd
 from langchain_community.utilities import SQLDatabase
-from langchain_google_genai import ChatGoogleGenerativeAI
 
 from src.config.setup import get_llm
 from src.ingestitions.build_database import (
@@ -20,11 +19,6 @@ from src.ingestitions.build_database import (
 )
 from src.tools.SQL_tools import TableSelection, UserIds, UserInfo, determine_tables, get_ids, get_info
 
-
-# @lru_cache(maxsize=1)
-# def _llm() -> ChatGoogleGenerativeAI:
-#     """Shared LLM instance for SQL tooling."""
-#     return ChatGoogleGenerativeAI(model="gemini-2.5-flash", api_key=_ensure_api_key())
 
 
 @lru_cache(maxsize=1)

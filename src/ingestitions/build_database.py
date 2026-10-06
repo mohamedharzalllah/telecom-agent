@@ -98,3 +98,7 @@ TABLE_DESCRIPTIONS: Dict[str, str] = {
 def describe_tables() -> List[Tuple[str, str]]:
     """Return table names with short descriptions."""
     return list(TABLE_DESCRIPTIONS.items())
+
+if __name__ == "__main__":
+    build_sqlite_from_excel(force_rebuild=False)
+    print("✅ Base SQLite créée avec succès:", DB_PATH)

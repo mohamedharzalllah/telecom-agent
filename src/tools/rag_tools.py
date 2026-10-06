@@ -92,46 +92,6 @@ def _eu_roaming_note(question: str) -> Optional[str]:
     return None
 
 
-def retrieve(state: GraphState) -> GraphState:
-    question = _latest_question(state["messages"])
-    # RAG context
-    docs = retriever.invoke(question)
-    rag_context = "\n\n".join(doc.page_content for doc in docs)
-    # Structured data context (SQL over Excel tables)
-    structured = run_structured_query(question)
-
-    context_parts = [
-        "=== Contexte FAQ ===",
-        rag_context,
-        "=== Contexte Données Structurées ===",
-        structured,
-    ]
-
-    roam_note = _eu_roaming_note(question)
-    if roam_note:
-        context_parts.extend(["=== Note roaming UE ===", roam_note])
-
-    context_parts.extend(
-        [
-            "=== Schéma tables ===",
-            schema_context(),
-            "=== Synthèse catalogue téléphones (secours) ===",
-            CATALOG_FALLBACK,
-        ]
-    )
-
-    context = "\n\n".join(context_parts)
-    return {"context": context}
-
-
-def generate(state: GraphState) -> GraphState:
-    question = _latest_question(state["messages"])
-    context = state.get("context", "")
-    qa_chain = prompt | llm
-    response = qa_chain.invoke({"question": question, "context": context})
-    return {"messages": [AIMessage(content=response.content)]}
-
-
 def _latest_question(messages: List[BaseMessage]) -> str:
     """Return the latest user question from the message list."""
     for msg in reversed(messages):

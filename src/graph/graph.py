@@ -51,12 +51,6 @@ def build_graph():
 
     def route(state: GraphState) -> GraphState:
         question = _latest_question(state["messages"])
-        q_lower = question.lower()
-        # Lightweight heuristics to avoid misrouting policy questions.
-        if any(k in q_lower for k in ["roaming", "étranger", "etranger", "voyage", "europe", "italie", "espagne", "usa", "états-unis", "etats-unis"]):
-            return {"mode": "hybrid"}
-        if "iphone" in q_lower or "téléphone" in q_lower or "telephone" in q_lower:
-            return {"mode": "rag"}
         router_prompt_text = router_prompt(question)
         decision_raw = llm.invoke(router_prompt_text).content.strip()
         mode = _parse_route(decision_raw)

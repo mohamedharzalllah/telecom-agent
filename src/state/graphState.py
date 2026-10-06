@@ -12,8 +12,4 @@ class GraphState(TypedDict, total=False):
     sql_context: str
     mode: str  # "rag" | "sql" | "hybrid"
     expected_answer: str  # optional: provided only when evaluation is needed
-    # judgment: str  # optional: populated by judge node when expected_answer is present
-    # # Optional aggregated context used by the standalone RAG agent.
-    # context: str
-
-
+    
